@@ -1,0 +1,17 @@
+[package]
+name = "hfw-save-converter"
+version = "0.1.0"
+description = "A cross-platform application to convert Horizon Forbidden West's PS4 saves to PC"
+authors = ["Krzysztof Saczuk <me@krzysztofsaczuk.pl>"]
+edition = "2021"
+repository = "https://github.com/zakuciael/hfw-save-converter"
+readme = "README.md"
+license = "GPL-3.0-or-later"
+keywords = ["save", "save-converter", "ps4-to-pc", "hfw"]
+categories = ["parser-implementations", "command-line-utilities"]
+
+[[bin]]
+name = "hfw-save-converter"
+path = "src/main.rs"
+
+[dependencies]
