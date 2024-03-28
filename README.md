@@ -23,8 +23,8 @@
 ### Installation
 
 > [!CAUTION]
-> This project is currently under **heavy development**, which means that it may be subject to **breaking changes** or *
-*corrupt** save files.
+> This project is currently under **heavy development**, which means that it may be subject to **breaking changes** or
+> **corrupt** save files.
 > Use it at your **own risk**.
 
 Download the executable from the
