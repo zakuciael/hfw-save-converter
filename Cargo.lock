@@ -304,6 +304,7 @@ name = "hfw-save-converter"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "byteorder",
  "clap",
  "color-eyre",
  "educe",

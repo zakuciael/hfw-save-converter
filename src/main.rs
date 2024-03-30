@@ -1,4 +1,4 @@
-use std::io::Write;
+use std::io::Read;
 
 use clap::Parser;
 use figment::Figment;
@@ -6,7 +6,7 @@ use figment::providers::Serialized;
 
 use crate::cli::CliArgs;
 use crate::log::{print_logo, setup_tracing};
-use crate::save::SaveMetadata;
+use crate::save::{SaveFile, SaveMetadata};
 
 pub mod cli;
 mod input;
@@ -18,7 +18,7 @@ fn main() -> color_eyre::Result<()> {
   print_logo();
   setup_tracing()?;
 
-  let cli_args = CliArgs::parse();
+  let mut cli_args = CliArgs::parse();
   println!("{:?}", &cli_args);
 
   let metadata: SaveMetadata = Figment::from(Serialized::defaults(SaveMetadata::default()))
@@ -26,6 +26,17 @@ fn main() -> color_eyre::Result<()> {
     .extract()?;
 
   println!("{:?}", &metadata);
+
+  let save_data = {
+    let mut buf = vec![];
+    cli_args.path.read_to_end(&mut buf)?;
+
+    buf
+  };
+
+  let save_file = SaveFile::new(metadata, save_data);
+
+  save_file.generate(&"./")?;
 
   Ok(())
 }
