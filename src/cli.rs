@@ -11,7 +11,7 @@ use crate::save::SaveType;
 #[derive(Parser, Debug)]
 pub struct CliArgs {
   #[arg(help = "Path to the checkpoint.dat file")]
-  pub path: Input,
+  pub save_file: Input,
 
   #[arg(long, help = "Path to the param.sfo file")]
   pub sfo: Option<Input>,
@@ -60,27 +60,22 @@ impl Provider for OverrideArgs {
   fn data(&self) -> Result<Map<Profile, Dict>, Error> {
     let mut dict = Dict::new();
 
-    if self.r#type.is_some() {
-      dict.insert(
-        "type".to_owned(),
-        Value::from(self.r#type.clone().unwrap().to_string()),
-      );
+    if let Some(value) = &self.r#type {
+      dict.insert("type".to_owned(), Value::from(value.to_string()));
     }
 
-    if self.name.is_some() {
-      dict.insert("name".to_owned(), Value::from(self.name.clone().unwrap()));
+    if let Some(value) = &self.name {
+      dict.insert("name".to_owned(), Value::from(value.clone()));
     }
 
-    if self.title.is_some() {
-      dict.insert("title".to_owned(), Value::from(self.title.clone().unwrap()));
+    if let Some(value) = &self.title {
+      dict.insert("title".to_owned(), Value::from(value.clone()));
     }
 
-    if self.image.is_some() {
+    if let Some(mut value) = self.image.clone() {
       let image = {
-        let mut image = self.image.clone().unwrap();
-
         let mut buf = vec![];
-        image.read_to_end(&mut buf).map_err(|err| err.to_string())?;
+        value.read_to_end(&mut buf).map_err(|err| err.to_string())?;
 
         buf
       };

@@ -1,5 +1,5 @@
 use std::ffi::{OsStr, OsString};
-use std::fmt::{Display, Formatter};
+use std::fmt::{Debug, Display, Formatter};
 use std::fs::File;
 use std::io::{Read, Seek, SeekFrom};
 use std::path::{Path, PathBuf};
@@ -9,7 +9,6 @@ use clap::{Arg, Command};
 use clap::builder::{TypedValueParser, ValueParserFactory};
 use clap::error::{Error, ErrorKind};
 
-#[derive(Debug)]
 pub struct Input {
   path: PathBuf,
   file: File,
@@ -29,6 +28,10 @@ impl Input {
 
   pub fn len(&self) -> Option<u64> {
     self.file.metadata().ok().map(|x| x.len())
+  }
+
+  pub fn path(&self) -> &Path {
+    &self.path
   }
 }
 
@@ -89,6 +92,12 @@ impl TryFrom<&str> for Input {
 
   fn try_from(value: &str) -> Result<Self, Self::Error> {
     Input::new(&value)
+  }
+}
+
+impl Debug for Input {
+  fn fmt(&self, fmt: &mut Formatter<'_>) -> std::fmt::Result {
+    write!(fmt, "{:?}", self.path.as_os_str())
   }
 }
 

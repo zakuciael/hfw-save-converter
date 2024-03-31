@@ -26,4 +26,4 @@ lazy_static = "1.4.0"
 serde = { version = "1.0.197", features = ["derive"] }
 tiny-gradient = "0.1.0"
 tracing = { version = "0.1.40", features = ["log"] }
-tracing-subscriber = { version = "0.3.18", features = ["fmt"] }
+tracing-subscriber = { version = "0.3.18", features = ["fmt", "env-filter"] }

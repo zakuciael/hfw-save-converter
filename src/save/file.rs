@@ -4,6 +4,7 @@ use std::mem::size_of;
 use std::path::{Path, PathBuf};
 
 use byteorder::{LittleEndian, WriteBytesExt};
+use tracing::info;
 
 use crate::save::metadata::SaveMetadata;
 
@@ -73,8 +74,9 @@ impl SaveFile {
     buf.write_all(&self.metadata.image)?;
 
     // Write to the actual file
-    fs::write(path, &buf)?;
+    fs::write(&path, &buf)?;
 
+    info!("Generated the save file in {:?}", &path);
     Ok(())
   }
 }
