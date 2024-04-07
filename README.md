@@ -9,39 +9,44 @@
 
 <h4 align="center">
     A cross-platform application to convert Horizon Forbidden West's PS4 saves to PC. <br />
-    This project only supports the <a href="https://store.steampowered.com/app/2420110/Horizon_Forbidden_West_Complete_Edition/">Steam</a> version of the game.
 </h4>
-
-## Usage
+<br />
 
 ### Pre-requirements
 
 - A decrypted PS4 save file (`checkpoint.dat` file).
-- (Optional) A `param.sfo` file associated with the save file.
-- (Optional) A PNG image for the save file.
+- (Optional) A `sce_sys/` folder containing the following files:
+    - A `param.sfo` file associated with the save file.
+    - A `icon0.png` file containing the save file's image.
 
 ### Installation
-
-> [!CAUTION]
-> This project is currently under **heavy development**, which means that it may be subject to **breaking changes** or
-> **corrupt** save files.
-> Use it at your **own risk**.
 
 Download the executable from the
 repository's [release page](https://github.com/zakuciael/hfw-save-converter/releases/latest) or build locally following
 the instructions in the [build section](#build).
 
-### Execution
+### Usage
 
 ```shell
-./hfw-save-converter.exe <checkpoint.dat> [-F <path/to/param.sfo>]
+./hfw-save-converter.exe <PS4_SAVE_FILE> [-o <OUTPUT_DIR>]
 ```
 
-For more options and configurations, check the **help** command of the executable.
+The converter will automatically look up the save metadata from `sce_sys/param.sfo` file located in the same directory
+as the PS4 save file.
+
+For more options and configurations, check out the **help** command.
 
 ## Build
 
-> TODO: Detail build steps for the project.
+To build the application, install Rust toolchain using the instructions found under the
+following [link](https://rustup.rs/).
+After installation, run the following command in the terminal
+
+```shell
+cargo build -r
+```
+
+This will build the release version of the application for the running operating system.
 
 ## License
 
