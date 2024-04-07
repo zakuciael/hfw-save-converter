@@ -2,8 +2,10 @@ use std::str::FromStr;
 
 use lazy_static::lazy_static;
 use tiny_gradient::{GradientStr, RGB};
-use tracing_subscriber::EnvFilter;
+use tracing_error::ErrorLayer;
 use tracing_subscriber::filter::LevelFilter;
+use tracing_subscriber::layer::SubscriberExt;
+use tracing_subscriber::util::SubscriberInitExt;
 
 static LOGO: &str = r#"  _  _ _____      __  ___   ___   _____    ___ ___  _  ___   _____ ___ _____ ___ ___
  | || | __\ \    / / / __| /_\ \ / / __|  / __/ _ \| \| \ \ / / __| _ \_   _| __| _ \
@@ -17,7 +19,7 @@ lazy_static! {
     .map(|v| v.unwrap());
 }
 
-pub fn setup_tracing() -> color_eyre::Result<()> {
+pub fn setup_tracing(level: tracing::Level) -> color_eyre::Result<()> {
   // For this app, I define three types of log levels:
   // 1. INFO – Used to inform the user about the relevant actions that the program is performing.
   //           For example it will log that the save was generated to a location X
@@ -26,17 +28,19 @@ pub fn setup_tracing() -> color_eyre::Result<()> {
   // 3. TRACE – Used to debug the application in case of a failure.
   //           For example it will log outputs of the functions that it performs or steps it took to parse the file.
 
-  let level_filter = EnvFilter::builder()
-    .with_default_directive(LevelFilter::INFO.into())
-    .with_env_var("LOG_LEVEL")
-    .from_env_lossy();
+  let fmt_layer = tracing_subscriber::fmt::layer()
+    .with_target(false)
+    .compact();
 
-  tracing_subscriber::fmt()
-    .with_env_filter(level_filter)
-    .compact()
-    .init();
+  let level_filter = LevelFilter::from_level(level);
 
-  Ok(())
+  Ok(
+    tracing_subscriber::registry()
+      .with(level_filter)
+      .with(fmt_layer)
+      .with(ErrorLayer::default())
+      .try_init()?,
+  )
 }
 
 pub fn print_logo() {

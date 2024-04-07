@@ -1,28 +1,27 @@
-use crate::sfo::param_data::SFOParamData;
+use binrw::{binread, NullString};
+use std::io::SeekFrom;
 
+use crate::sfo::data::format::SFODataFormat;
+use crate::sfo::data::SFOParamData;
+
+#[binread]
 #[derive(Debug)]
+#[br(little)]
+#[br(import { key_table_offset: u32, data_table_offset: u32 })]
 pub struct SFOParam {
-  pub key: String,
-  pub format_type: u16,
-  pub length: u32,
-  pub max_length: u32,
+  #[br(temp)]
+  key_offset: u16,
+  #[br(temp)]
+  data_format: SFODataFormat,
+  #[br(temp)]
+  data_length: u32,
+  #[br(temp)]
+  data_capacity: u32,
+  #[br(temp)]
+  data_offset: u32,
+  #[br(seek_before = SeekFrom::Start(key_table_offset as u64 + key_offset as u64), restore_position)]
+  pub key: NullString,
+  #[br(seek_before = SeekFrom::Start((data_table_offset + data_offset) as u64), restore_position)]
+  #[br(args { format: data_format, length: data_length, capacity: data_capacity })]
   pub data: SFOParamData,
-}
-
-impl SFOParam {
-  pub fn new(
-    key: String,
-    format_type: u16,
-    length: u32,
-    max_length: u32,
-    data: SFOParamData,
-  ) -> Self {
-    Self {
-      key,
-      format_type,
-      length,
-      max_length,
-      data,
-    }
-  }
 }
