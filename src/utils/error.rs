@@ -1,9 +1,10 @@
+use core::convert::Into;
+use std::fmt::{Display, Formatter};
+
 use binrw::error::BacktraceFrame;
 use binrw::Error;
 use color_eyre::eyre::eyre;
 use color_eyre::Report;
-use core::convert::Into;
-use std::fmt::{Display, Formatter};
 
 pub trait ToReport {
   fn to_report(&self) -> Report;

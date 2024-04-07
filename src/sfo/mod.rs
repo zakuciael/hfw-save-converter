@@ -1,14 +1,17 @@
+use std::collections::HashMap;
+use std::fs::File;
+use std::path::{Path, PathBuf};
+
+use binrw::io::BufReader;
+use binrw::{binread, BinRead};
+use color_eyre::eyre::bail;
+
+pub use header::SFOHeader;
+
 use crate::save::SaveMetadata;
 use crate::sfo::data::SFOParamData;
 use crate::sfo::param::SFOParam;
 use crate::utils::error::ToReport;
-use binrw::io::BufReader;
-use binrw::{binread, BinRead};
-use color_eyre::eyre::bail;
-pub use header::SFOHeader;
-use std::collections::HashMap;
-use std::fs::File;
-use std::path::{Path, PathBuf};
 
 mod data;
 mod header;

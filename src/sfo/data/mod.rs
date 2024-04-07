@@ -1,6 +1,7 @@
-use crate::sfo::data::format::SFODataFormat;
 use binrw::{binread, NullString};
 use derivative::Derivative;
+
+use crate::sfo::data::format::SFODataFormat;
 
 pub mod format;
 

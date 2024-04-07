@@ -1,17 +1,20 @@
-use crate::utils;
-use crate::utils::error::ToReport;
+use std::fs;
+use std::fs::File;
+use std::io::{BufWriter, ErrorKind};
+use std::path::{Path, PathBuf};
+
 use binrw::io::BufReader;
 use binrw::{binrw, BinRead, BinWrite, NullString};
 use color_eyre::eyre::{bail, WrapErr};
 use color_eyre::Report;
 use derivative::Derivative;
-pub use metadata::SaveMetadata;
 use path_absolutize::Absolutize;
-use std::fs;
-use std::fs::File;
-use std::io::{BufWriter, ErrorKind};
-use std::path::{Path, PathBuf};
 use tracing::{error, info, warn};
+
+pub use metadata::SaveMetadata;
+
+use crate::utils;
+use crate::utils::error::ToReport;
 
 mod metadata;
 

@@ -1,8 +1,8 @@
-pub mod macros;
-
 use std::path::PathBuf;
 
 use clap::{Parser, ValueHint};
+
+pub mod macros;
 
 #[derive(Parser, Debug)]
 pub struct CliArgs {

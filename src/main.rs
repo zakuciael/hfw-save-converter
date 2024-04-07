@@ -1,15 +1,17 @@
+use std::env;
+use std::fs::File;
+use std::path::PathBuf;
+
+use clap::{CommandFactory, Parser};
+use color_eyre::eyre::{eyre, WrapErr};
+use path_absolutize::Absolutize;
+use tracing::{debug, info, trace, warn};
+
 use crate::cli::macros::clap_error;
 use crate::cli::CliArgs;
 use crate::log::{print_logo, setup_tracing};
 use crate::save::{SaveFile, SaveMetadata};
 use crate::sfo::SFOFile;
-use clap::{CommandFactory, Parser};
-use color_eyre::eyre::{eyre, WrapErr};
-use path_absolutize::Absolutize;
-use std::env;
-use std::fs::File;
-use std::path::PathBuf;
-use tracing::{debug, info, trace, warn};
 
 mod cli;
 mod log;

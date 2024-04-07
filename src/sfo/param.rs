@@ -1,5 +1,6 @@
-use binrw::{binread, NullString};
 use std::io::SeekFrom;
+
+use binrw::{binread, NullString};
 
 use crate::sfo::data::format::SFODataFormat;
 use crate::sfo::data::SFOParamData;
