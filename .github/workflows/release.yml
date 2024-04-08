@@ -1,0 +1,72 @@
+name: Release
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*.*.*'
+permissions:
+  contents: write
+env:
+  CRATE_NAME: hfw-save-converter
+  GITHUB_TOKEN: ${{ github.token }}
+  RUST_BACKTRACE: 1
+
+jobs:
+  release:
+    name: Build release for ${{ matrix.platform.os_name }}
+    runs-on: ${{ matrix.platform.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - os_name: windows-x86_64-msvc
+            os: windows-latest
+            target: x86_64-pc-windows-msvc
+            bin: hfw-save-converter.exe
+            name: hfw-save-converter-windows-x86_64-msvc.zip
+          - os_name: windows-x86_64-gnu
+            os: windows-latest
+            target: x86_64-pc-windows-gnu
+            bin: hfw-save-converter.exe
+            name: hfw-save-converter-windows-x86_64-gnu.zip
+          - os_name: linux-x86_64-gnu
+            os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            bin: hfw-save-converter
+            name: hfw-save-converter-linux-x86_64-gnu.tar.gz
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+      - name: Cache dependencies & build artifacts
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: "v2"
+      - name: Build binary
+        uses: houseabsolute/actions-rust-cross@v0
+        with:
+          command: "build"
+          target: ${{ matrix.platform.target }}
+          toolchain: "stable"
+          args: "--locked --release"
+          strip: true
+      - name: Package binary as an archive
+        shell: bash
+        run: |
+          cd target/${{ matrix.platform.target }}/release
+          if [[ "${{ matrix.platform.os }}" == "windows-latest" ]]; then
+            7z a ../../../${{ matrix.platform.name }} ${{ matrix.platform.bin }}
+          else
+            tar czvf ../../../${{ matrix.platform.name }} ${{ matrix.platform.bin }}
+          fi
+          cd -
+      - name: Publish release artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: hfw-save-converter-${{ matrix.platform.os_name }}
+          path: "hfw-save-converter-*"
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          files: "hfw-save-converter-*"
